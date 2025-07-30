@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function Navigation() {
@@ -52,6 +52,16 @@ export function Navigation() {
             <Button className="bg-orange-500 hover:bg-orange-600 text-white">
               Schedule Visit
             </Button>
+            <Link href="/admin-edit">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-gray-300 text-gray-600 hover:bg-gray-50"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Admin
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -87,6 +97,17 @@ export function Navigation() {
                 <Button className="mt-2 bg-orange-500 hover:bg-orange-600 text-white w-full">
                   Schedule Visit
                 </Button>
+                <Link href="/admin-edit">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2 w-full border-gray-300 text-gray-600 hover:bg-gray-50"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Admin Panel
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

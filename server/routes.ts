@@ -5,6 +5,27 @@ import { insertLayoutBlockSchema, insertPageSchema, insertTestimonialSchema, ins
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Auth
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      // Simple admin auth check
+      if (email === 'admin@tubsoffun.com' && password === 'admin123') {
+        const user = {
+          id: '1',
+          email: 'admin@tubsoffun.com',
+          role: 'admin'
+        };
+        res.json({ user });
+      } else {
+        res.status(401).json({ error: 'Invalid credentials' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to authenticate' });
+    }
+  });
+
   // Pages
   app.get("/api/pages/:slug", async (req, res) => {
     try {
