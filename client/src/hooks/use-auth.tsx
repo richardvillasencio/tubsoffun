@@ -29,10 +29,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const response: any = await apiRequest('POST', '/api/auth/login', { email, password });
-    if (response.user) {
-      setUser(response.user);
-      localStorage.setItem('auth_user', JSON.stringify(response.user));
+    try {
+      const response: any = await apiRequest('POST', '/api/auth/login', { email, password });
+      if (response.user) {
+        setUser(response.user);
+        localStorage.setItem('auth_user', JSON.stringify(response.user));
+      } else {
+        throw new Error('Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Sign in error:', error);
+      throw error;
     }
   };
 

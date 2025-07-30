@@ -12,8 +12,8 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children }: AuthGuardProps) {
   const { user, loading, signIn } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@tubsoffun.com');
+  const [password, setPassword] = useState('admin123');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -54,6 +54,11 @@ export function AuthGuard({ children }: AuthGuardProps) {
             <div className="text-center mb-6">
               <h2 className="text-3xl font-bold text-gray-900">Admin Login</h2>
               <p className="mt-2 text-gray-600">Access the visual content editor</p>
+              <div className="mt-3 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
+                <p><strong>Demo credentials pre-filled:</strong></p>
+                <p>Email: admin@tubsoffun.com</p>
+                <p>Password: admin123</p>
+              </div>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
