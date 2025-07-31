@@ -603,7 +603,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteGalleryImage(id: string): Promise<boolean> {
     const result = await db.delete(galleryImages).where(eq(galleryImages.id, id));
-    return (result.rowCount || 0) > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   async getUploadedFile(id: string): Promise<UploadedFile | undefined> {
@@ -625,7 +625,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteUploadedFile(id: string): Promise<boolean> {
     const result = await db.delete(uploadedFiles).where(eq(uploadedFiles.id, id));
-    return (result.rowCount || 0) > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   async getHeaderConfig(): Promise<HeaderConfig | undefined> {
