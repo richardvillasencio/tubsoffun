@@ -48,13 +48,24 @@ export function VisualEditor() {
 
   const addNewBlock = (type: string) => {
     const defaultContent = {
-      hero: { title: 'New Hero Section', subtitle: 'Subtitle here' },
+      hero: { 
+        title: 'FAMILY TIME MADE SIMPLE!!!', 
+        subtitle: 'Let us help you transform your space',
+        description: 'Our friendly and knowledgeable staff are here to show you our amazing Hot tubs, Swim spas, Pools, Saunas, and more!',
+        ctaPrimary: 'Schedule Your Visit',
+        ctaSecondary: 'View Products',
+        imageUrl: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600&q=80',
+        overlayOpacity: '60',
+        textAlignment: 'center'
+      },
       about: { title: 'About Us', founderName: 'Name Here' },
       services: { title: 'Our Services' },
       testimonials: { title: 'Testimonials' },
       gallery: { title: 'Gallery' },
       text: { title: 'Text Block', text: 'Your content here' },
-      image: { title: 'Image Block', imageUrl: '', alt: 'Description' }
+      image: { title: 'Image Block', imageUrl: '', alt: 'Description' },
+      video: { title: 'Video Section', videoUrl: '', description: 'Video description' },
+      cta: { title: 'Call to Action', buttonText: 'Get Started', buttonLink: '/contact' }
     };
 
     createBlock({
