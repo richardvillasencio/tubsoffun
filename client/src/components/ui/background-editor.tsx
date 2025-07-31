@@ -110,7 +110,7 @@ export function BackgroundEditor({
               />
               <Input
                 type="text"
-                value={backgroundColor}
+                value={backgroundColor || ''}
                 onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
                 placeholder="#ffffff"
                 className="flex-1"
