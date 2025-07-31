@@ -13,17 +13,23 @@ export function Navigation() {
     queryKey: ['/api/header-config'],
   });
 
-  // Default navigation fallback
+  // Default navigation fallback - matches the comprehensive menu structure
   const defaultNavigation = [
     { name: 'Home', href: '/' },
     { name: 'Hot Tubs', href: '/hot-tubs' },
-    { name: 'Saunas', href: '/saunas' },
-    { name: 'Pools', href: '/pools' },
     { name: 'Swim Spas', href: '/swim-spas' },
+    { name: 'Pools', href: '/pools' },
+    { name: 'Saunas', href: '/saunas' },
+    { name: 'Pool Tables', href: '/pool-tables' },
+    { name: 'Outdoor Furniture', href: '/outdoor-furniture' },
+    { name: 'Services', href: '/services' },
+    { name: 'About', href: '/about' },
+    { name: 'Gallery', href: '/gallery' },
+    { name: 'Financing', href: '/financing' },
     { name: 'Contact', href: '/contact' },
   ];
 
-  const navigation = headerConfig?.navigationItems || defaultNavigation;
+  const navigation = (headerConfig?.navigationItems as any[]) || defaultNavigation;
   const logoUrl = headerConfig?.logoUrl || "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/Q8i1yKqsccON1uqGARTN/media/67533211d7b7d40b30b4935c.svg";
   const logoAlt = headerConfig?.logoAlt || "Tubs of Fun Logo";
   const contactPhone = headerConfig?.contactPhone || "(701) 234-0705";
