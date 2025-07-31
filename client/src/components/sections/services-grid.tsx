@@ -19,9 +19,9 @@ export function ServicesGrid({ content }: ServicesGridProps) {
       description: "Luxury hot tubs for relaxation and therapy"
     },
     {
-      title: "SAUNAS",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
-      description: "Traditional and infrared saunas for wellness"
+      title: "SWIM SPAS",
+      image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
+      description: "Exercise and relaxation in one unit"
     },
     {
       title: "POOLS",
@@ -29,29 +29,29 @@ export function ServicesGrid({ content }: ServicesGridProps) {
       description: "Above ground and in-ground swimming pools"
     },
     {
-      title: "SWIM SPAS",
-      image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
-      description: "Exercise and relaxation in one unit"
+      title: "SAUNAS",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
+      description: "Traditional and infrared saunas for wellness"
     },
     {
-      title: "GAME ROOM ESSENTIALS",
+      title: "POOL TABLES",
       image: "https://images.unsplash.com/photo-1493780474015-ba834fd0ce2f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
-      description: "Pool tables, arcade games, and entertainment"
+      description: "Professional quality pool tables"
     },
     {
-      title: "GRILLS",
-      image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
-      description: "Premium outdoor grilling equipment"
+      title: "OUTDOOR FURNITURE",
+      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
+      description: "Premium outdoor living furniture"
     },
     {
-      title: "SERVICE",
+      title: "SERVICE & REPAIRS",
       image: "https://images.unsplash.com/photo-1581092795442-8c4b3756b42f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
-      description: "Professional maintenance and support"
+      description: "Professional maintenance and repair services"
     },
     {
-      title: "REPAIRS",
-      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
-      description: "Expert repair services for all equipment"
+      title: "ACCESSORIES",
+      image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400",
+      description: "Chemicals, covers, and maintenance supplies"
     }
   ];
 

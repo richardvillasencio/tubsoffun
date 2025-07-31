@@ -23,6 +23,16 @@ interface HeaderConfigData {
   contactText?: string;
   ctaText?: string;
   ctaLink?: string;
+  // Top bar fields
+  topBarEnabled?: boolean;
+  topBarPhone?: string;
+  topBarAddress?: string;
+  topBarBackgroundColor?: string;
+  topBarTextColor?: string;
+  topBarLinks?: NavigationItem[];
+  // Main navigation fields  
+  mainNavBackgroundColor?: string;
+  mainNavTextColor?: string;
   backgroundColor?: string;
   backgroundType?: 'solid' | 'gradient' | 'image';
   backgroundImage?: string;
@@ -40,17 +50,31 @@ export function HeaderEditor() {
     logoUrl: '',
     logoAlt: 'Logo',
     navigationItems: [
-      { name: 'Home', href: '/' },
-      { name: 'Hot Tubs', href: '/hot-tubs' },
-      { name: 'Saunas', href: '/saunas' },
-      { name: 'Pools', href: '/pools' },
-      { name: 'Swim Spas', href: '/swim-spas' },
-      { name: 'Contact', href: '/contact' },
+      { name: 'HOT TUBS', href: '/hot-tubs' },
+      { name: 'SAUNAS', href: '/saunas' },
+      { name: 'POOL', href: '/pools' },
+      { name: 'SWIM SPAS', href: '/swim-spas' },
+      { name: 'GAME ROOM ESSENTIALS', href: '/pool-tables' },
+      { name: 'GRILLS', href: '/outdoor-furniture' },
     ],
     contactPhone: '(701) 234-0705',
     contactText: 'Call Us Today',
     ctaText: 'Schedule Visit',
     ctaLink: '/contact',
+    // Top bar settings
+    topBarEnabled: true,
+    topBarPhone: '(701) 234-0705',
+    topBarAddress: '601 Main Ave W, West Fargo, ND 58078',
+    topBarBackgroundColor: '#2dd4bf',
+    topBarTextColor: '#ffffff',
+    topBarLinks: [
+      { name: 'Contact Us', href: '/contact' },
+      { name: 'Our Company', href: '/about' },
+      { name: 'Home', href: '/' },
+    ],
+    // Main navigation settings
+    mainNavBackgroundColor: '#f97316',
+    mainNavTextColor: '#ffffff',
     backgroundColor: '#ffffff',
     backgroundType: 'solid',
     textColor: '#000000',
@@ -156,8 +180,9 @@ export function HeaderEditor() {
       </div>
 
       <Tabs defaultValue="logo" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="logo">Logo & Branding</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="logo">Logo</TabsTrigger>
+          <TabsTrigger value="topbar">Top Header</TabsTrigger>
           <TabsTrigger value="navigation">Navigation</TabsTrigger>
           <TabsTrigger value="contact">Contact Info</TabsTrigger>
           <TabsTrigger value="styling">Styling</TabsTrigger>
@@ -182,6 +207,117 @@ export function HeaderEditor() {
                   onChange={(e) => updateConfig('logoAlt', e.target.value)}
                   placeholder="Descriptive text for screen readers"
                 />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="topbar" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Top Header Bar</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="topBarEnabled"
+                  checked={config.topBarEnabled ?? true}
+                  onChange={(e) => updateConfig('topBarEnabled', e.target.checked)}
+                  className="rounded"
+                />
+                <Label htmlFor="topBarEnabled">Enable Top Header Bar</Label>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="topBarPhone">Phone Number</Label>
+                  <Input
+                    id="topBarPhone"
+                    value={config.topBarPhone || ''}
+                    onChange={(e) => updateConfig('topBarPhone', e.target.value)}
+                    placeholder="(701) 234-0705"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="topBarAddress">Address</Label>
+                  <Input
+                    id="topBarAddress"
+                    value={config.topBarAddress || ''}
+                    onChange={(e) => updateConfig('topBarAddress', e.target.value)}
+                    placeholder="601 Main Ave W, West Fargo, ND 58078"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="topBarBackgroundColor">Background Color</Label>
+                  <Input
+                    id="topBarBackgroundColor"
+                    type="color"
+                    value={config.topBarBackgroundColor || '#2dd4bf'}
+                    onChange={(e) => updateConfig('topBarBackgroundColor', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="topBarTextColor">Text Color</Label>
+                  <Input
+                    id="topBarTextColor"
+                    type="color"
+                    value={config.topBarTextColor || '#ffffff'}
+                    onChange={(e) => updateConfig('topBarTextColor', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label>Top Header Links</Label>
+                <div className="space-y-2 mt-2">
+                  {config.topBarLinks?.map((link, index) => (
+                    <div key={index} className="flex items-center space-x-2 p-3 border rounded">
+                      <Input
+                        placeholder="Link Name"
+                        value={link.name}
+                        onChange={(e) => {
+                          const newLinks = [...(config.topBarLinks || [])];
+                          newLinks[index] = { ...newLinks[index], name: e.target.value };
+                          updateConfig('topBarLinks', newLinks);
+                        }}
+                      />
+                      <Input
+                        placeholder="/link-url"
+                        value={link.href}
+                        onChange={(e) => {
+                          const newLinks = [...(config.topBarLinks || [])];
+                          newLinks[index] = { ...newLinks[index], href: e.target.value };
+                          updateConfig('topBarLinks', newLinks);
+                        }}
+                      />
+                      <Button
+                        onClick={() => {
+                          const newLinks = (config.topBarLinks || []).filter((_, i) => i !== index);
+                          updateConfig('topBarLinks', newLinks);
+                        }}
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    onClick={() => {
+                      const newLinks = [...(config.topBarLinks || []), { name: 'New Link', href: '#' }];
+                      updateConfig('topBarLinks', newLinks);
+                    }}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Link
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

@@ -1,5 +1,29 @@
 import { type User, type InsertUser, type Page, type InsertPage, type LayoutBlock, type InsertLayoutBlock, type Testimonial, type InsertTestimonial, type GalleryImage, type InsertGalleryImage, type UploadedFile, type InsertUploadedFile, type HeaderConfig, type InsertHeaderConfig } from "@shared/schema";
 import { randomUUID } from "crypto";
+// Conditional imports for database functionality
+let db: any = null;
+let users: any, pages: any, layoutBlocks: any, testimonials: any, galleryImages: any, uploadedFiles: any, headerConfig: any;
+let eq: any = null;
+
+// Only import database modules if DATABASE_URL is set
+if (process.env.DATABASE_URL) {
+  try {
+    const dbModule = require("./db");
+    db = dbModule.db;
+    const schemaModule = require("@shared/schema");
+    users = schemaModule.users;
+    pages = schemaModule.pages;
+    layoutBlocks = schemaModule.layoutBlocks;
+    testimonials = schemaModule.testimonials;
+    galleryImages = schemaModule.galleryImages;
+    uploadedFiles = schemaModule.uploadedFiles;
+    headerConfig = schemaModule.headerConfig;
+    const drizzleModule = require("drizzle-orm");
+    eq = drizzleModule.eq;
+  } catch (error) {
+    console.warn("Database modules not available, using memory storage");
+  }
+}
 
 export interface IStorage {
   // Users
@@ -437,4 +461,210 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage Implementation
+export class DatabaseStorage implements IStorage {
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async getPage(id: string): Promise<Page | undefined> {
+    const [page] = await db.select().from(pages).where(eq(pages.id, id));
+    return page || undefined;
+  }
+
+  async getPageBySlug(slug: string): Promise<Page | undefined> {
+    const [page] = await db.select().from(pages).where(eq(pages.slug, slug));
+    return page || undefined;
+  }
+
+  async createPage(insertPage: InsertPage): Promise<Page> {
+    const [page] = await db
+      .insert(pages)
+      .values(insertPage)
+      .returning();
+    return page;
+  }
+
+  async updatePage(id: string, updates: Partial<Page>): Promise<Page | undefined> {
+    const [page] = await db
+      .update(pages)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(pages.id, id))
+      .returning();
+    return page || undefined;
+  }
+
+  async getLayoutBlock(id: string): Promise<LayoutBlock | undefined> {
+    const [block] = await db.select().from(layoutBlocks).where(eq(layoutBlocks.id, id));
+    return block || undefined;
+  }
+
+  async getLayoutBlocksByPageId(pageId: string): Promise<LayoutBlock[]> {
+    return await db.select().from(layoutBlocks).where(eq(layoutBlocks.pageId, pageId));
+  }
+
+  async getLayoutBlocksByPageSlug(slug: string): Promise<LayoutBlock[]> {
+    const page = await this.getPageBySlug(slug);
+    if (!page) return [];
+    return this.getLayoutBlocksByPageId(page.id);
+  }
+
+  async createLayoutBlock(insertBlock: InsertLayoutBlock): Promise<LayoutBlock> {
+    const [block] = await db
+      .insert(layoutBlocks)
+      .values(insertBlock)
+      .returning();
+    return block;
+  }
+
+  async updateLayoutBlock(id: string, updates: Partial<LayoutBlock>): Promise<LayoutBlock | undefined> {
+    const [block] = await db
+      .update(layoutBlocks)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(layoutBlocks.id, id))
+      .returning();
+    return block || undefined;
+  }
+
+  async deleteLayoutBlock(id: string): Promise<boolean> {
+    const result = await db.delete(layoutBlocks).where(eq(layoutBlocks.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async reorderLayoutBlocks(blocks: Array<{ id: string; order: number }>): Promise<void> {
+    for (const block of blocks) {
+      await db
+        .update(layoutBlocks)
+        .set({ order: block.order, updatedAt: new Date() })
+        .where(eq(layoutBlocks.id, block.id));
+    }
+  }
+
+  async getTestimonials(): Promise<Testimonial[]> {
+    return await db.select().from(testimonials);
+  }
+
+  async createTestimonial(insertTestimonial: InsertTestimonial): Promise<Testimonial> {
+    const [testimonial] = await db
+      .insert(testimonials)
+      .values(insertTestimonial)
+      .returning();
+    return testimonial;
+  }
+
+  async updateTestimonial(id: string, updates: Partial<Testimonial>): Promise<Testimonial | undefined> {
+    const [testimonial] = await db
+      .update(testimonials)
+      .set(updates)
+      .where(eq(testimonials.id, id))
+      .returning();
+    return testimonial || undefined;
+  }
+
+  async deleteTestimonial(id: string): Promise<boolean> {
+    const result = await db.delete(testimonials).where(eq(testimonials.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async getGalleryImages(): Promise<GalleryImage[]> {
+    return await db.select().from(galleryImages);
+  }
+
+  async createGalleryImage(insertImage: InsertGalleryImage): Promise<GalleryImage> {
+    const [image] = await db
+      .insert(galleryImages)
+      .values(insertImage)
+      .returning();
+    return image;
+  }
+
+  async updateGalleryImage(id: string, updates: Partial<GalleryImage>): Promise<GalleryImage | undefined> {
+    const [image] = await db
+      .update(galleryImages)
+      .set(updates)
+      .where(eq(galleryImages.id, id))
+      .returning();
+    return image || undefined;
+  }
+
+  async deleteGalleryImage(id: string): Promise<boolean> {
+    const result = await db.delete(galleryImages).where(eq(galleryImages.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async getUploadedFile(id: string): Promise<UploadedFile | undefined> {
+    const [file] = await db.select().from(uploadedFiles).where(eq(uploadedFiles.id, id));
+    return file || undefined;
+  }
+
+  async getUploadedFiles(): Promise<UploadedFile[]> {
+    return await db.select().from(uploadedFiles);
+  }
+
+  async createUploadedFile(insertFile: InsertUploadedFile): Promise<UploadedFile> {
+    const [file] = await db
+      .insert(uploadedFiles)
+      .values(insertFile)
+      .returning();
+    return file;
+  }
+
+  async deleteUploadedFile(id: string): Promise<boolean> {
+    const result = await db.delete(uploadedFiles).where(eq(uploadedFiles.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async getHeaderConfig(): Promise<HeaderConfig | undefined> {
+    const [config] = await db.select().from(headerConfig).where(eq(headerConfig.isActive, true));
+    return config || undefined;
+  }
+
+  async createHeaderConfig(insertConfig: InsertHeaderConfig): Promise<HeaderConfig> {
+    // Deactivate existing active configs
+    await db
+      .update(headerConfig)
+      .set({ isActive: false })
+      .where(eq(headerConfig.isActive, true));
+
+    const [config] = await db
+      .insert(headerConfig)
+      .values({ ...insertConfig, isActive: true })
+      .returning();
+    return config;
+  }
+
+  async updateHeaderConfig(id: string, updates: Partial<HeaderConfig>): Promise<HeaderConfig | undefined> {
+    // If setting this one to active, deactivate others
+    if (updates.isActive) {
+      await db
+        .update(headerConfig)
+        .set({ isActive: false })
+        .where(eq(headerConfig.isActive, true));
+    }
+
+    const [config] = await db
+      .update(headerConfig)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(headerConfig.id, id))
+      .returning();
+    return config || undefined;
+  }
+}
+
+// Use database storage if DATABASE_URL is provided, otherwise fallback to memory storage
+const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
+export { storage };

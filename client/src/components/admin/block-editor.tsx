@@ -30,38 +30,89 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
         return (
           <>
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Main Title</Label>
               <Input
                 id="title"
-                value={content.title || ''}
+                value={content.title || 'FAMILY TIME MADE SIMPLE!!!'}
                 onChange={(e) => updateContent('title', e.target.value)}
                 className="mt-1"
+                placeholder="FAMILY TIME MADE SIMPLE!!!"
               />
             </div>
             <div>
               <Label htmlFor="subtitle">Subtitle</Label>
               <Input
                 id="subtitle"
-                value={content.subtitle || ''}
+                value={content.subtitle || 'Let us help you transform your space'}
                 onChange={(e) => updateContent('subtitle', e.target.value)}
                 className="mt-1"
+                placeholder="Let us help you transform your space"
               />
             </div>
             <div>
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
-                rows={3}
-                value={content.description || ''}
+                rows={4}
+                value={content.description || 'Our friendly and knowledgeable staff are here to show you our amazing Hot tubs, Swim spas, Pools, Saunas, and more!'}
                 onChange={(e) => updateContent('description', e.target.value)}
                 className="mt-1"
+                placeholder="Our friendly and knowledgeable staff are here to show you our amazing Hot tubs, Swim spas, Pools, Saunas, and more!"
+              />
+            </div>
+            <div>
+              <Label htmlFor="ctaPrimary">Primary Button Text</Label>
+              <Input
+                id="ctaPrimary"
+                value={content.ctaPrimary || 'Schedule Your Visit'}
+                onChange={(e) => updateContent('ctaPrimary', e.target.value)}
+                className="mt-1"
+                placeholder="Schedule Your Visit"
+              />
+            </div>
+            <div>
+              <Label htmlFor="ctaSecondary">Secondary Button Text</Label>
+              <Input
+                id="ctaSecondary"
+                value={content.ctaSecondary || 'View Products'}
+                onChange={(e) => updateContent('ctaSecondary', e.target.value)}
+                className="mt-1"
+                placeholder="View Products"
               />
             </div>
             <ImageUpload
-              label="Hero Image"
+              label="Background Image (Upload a high-quality image showing families enjoying pool/spa time)"
               value={content.imageUrl || ''}
               onChange={(url) => updateContent('imageUrl', url)}
             />
+            <div>
+              <Label htmlFor="overlayOpacity">Background Overlay Opacity</Label>
+              <Select value={content.overlayOpacity || '60'} onValueChange={(value) => updateContent('overlayOpacity', value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="40">Light (40%)</SelectItem>
+                  <SelectItem value="50">Medium-Light (50%)</SelectItem>
+                  <SelectItem value="60">Medium (60%)</SelectItem>
+                  <SelectItem value="70">Medium-Dark (70%)</SelectItem>
+                  <SelectItem value="80">Dark (80%)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="textAlignment">Text Alignment</Label>
+              <Select value={content.textAlignment || 'center'} onValueChange={(value) => updateContent('textAlignment', value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </>
         );
 
