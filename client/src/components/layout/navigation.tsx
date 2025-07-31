@@ -68,47 +68,80 @@ export function Navigation() {
 
   return (
     <header className="sticky top-0 z-50">
-      {/* Top Bar - Teal/Turquoise Section */}
-      <div className="bg-teal-400 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-10 text-sm">
-            {/* Contact Info */}
-            <div className="flex items-center space-x-4">
-              <span className="flex items-center">
-                <Phone className="h-3 w-3 mr-1" />
-                (701) 234-0705
-              </span>
-              <span className="hidden sm:block">📍 601 Main Ave W, West Fargo, ND 58078</span>
-            </div>
-            
-            {/* Top Right Menu */}
-            <div className="flex items-center space-x-4 text-sm">
-              <Link href="/contact" className="hover:text-teal-100 flex items-center">
-                Contact Us
-                <svg className="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </Link>
-              <span className="text-teal-200">|</span>
-              <Link href="/about" className="hover:text-teal-100 flex items-center">
-                Our Company
-                <svg className="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </Link>
-              <span className="text-teal-200">|</span>
-              <Link href="/" className="hover:text-teal-100">Home</Link>
-              {/* Mascot Character */}
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                🏊
+      {/* Top Bar - Customizable Section */}
+      {headerConfig?.topBarEnabled !== false && (
+        <div 
+          className="text-white"
+          style={{ 
+            backgroundColor: headerConfig?.topBarBackgroundColor || '#2dd4bf',
+            color: headerConfig?.topBarTextColor || '#ffffff'
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-10 text-sm">
+              {/* Contact Info */}
+              <div className="flex items-center space-x-4">
+                <span className="flex items-center">
+                  <Phone className="h-3 w-3 mr-1" />
+                  {headerConfig?.topBarPhone || '(701) 234-0705'}
+                </span>
+                <span className="hidden sm:block">
+                  📍 {headerConfig?.topBarAddress || '601 Main Ave W, West Fargo, ND 58078'}
+                </span>
+              </div>
+              
+              {/* Top Right Menu */}
+              <div className="flex items-center space-x-4 text-sm">
+                {headerConfig?.topBarLinks && Array.isArray(headerConfig.topBarLinks) ? 
+                  (headerConfig.topBarLinks as Array<{name: string, href: string, hasDropdown?: boolean}>).map((link, index: number) => (
+                    <div key={index} className="flex items-center space-x-4">
+                      <Link href={link.href || '#'} className="hover:opacity-80 flex items-center">
+                        {link.name}
+                        {link.hasDropdown && (
+                          <svg className="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        )}
+                      </Link>
+                      {index < headerConfig.topBarLinks.length - 1 && <span className="opacity-60">|</span>}
+                    </div>
+                  )) :
+                  <>
+                    <Link href="/contact" className="hover:opacity-80 flex items-center">
+                      Contact Us
+                      <svg className="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </Link>
+                    <span className="opacity-60">|</span>
+                    <Link href="/about" className="hover:opacity-80 flex items-center">
+                      Our Company
+                      <svg className="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </Link>
+                    <span className="opacity-60">|</span>
+                    <Link href="/" className="hover:opacity-80">Home</Link>
+                  </>
+                }
+                {/* Mascot Character */}
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                  🏊
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Main Navigation - Orange Gradient Section */}
-      <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-lg">
+      {/* Main Navigation - Customizable Section */}
+      <div 
+        className="text-white shadow-lg"
+        style={{ 
+          backgroundColor: headerConfig?.mainNavBackgroundColor || '#f97316',
+          color: headerConfig?.mainNavTextColor || '#ffffff'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -198,7 +231,13 @@ export function Navigation() {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="lg:hidden bg-orange-500 border-t border-orange-300">
+            <div 
+              className="lg:hidden border-t"
+              style={{ 
+                backgroundColor: headerConfig?.mainNavBackgroundColor || '#f97316',
+                borderColor: 'rgba(255,255,255,0.2)'
+              }}
+            >
               <div className="px-4 py-4 space-y-2">
                 <Link href="/hot-tubs" className="block py-3 text-white hover:text-orange-200 font-medium border-b border-orange-300" onClick={() => setIsMenuOpen(false)}>
                   HOT TUBS
