@@ -1,10 +1,51 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { insertLayoutBlockSchema, insertPageSchema, insertTestimonialSchema, insertGalleryImageSchema } from "@shared/schema";
+import { storage as dbStorage } from "./storage";
+import { insertLayoutBlockSchema, insertPageSchema, insertTestimonialSchema, insertGalleryImageSchema, insertUploadedFileSchema, insertHeaderConfigSchema } from "@shared/schema";
 import { z } from "zod";
+import multer from "multer";
+import path from "path";
+import fs from "fs/promises";
+import express from "express";
+
+// Configure multer for file uploads
+const uploadDir = path.join(process.cwd(), 'uploads');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+  }
+});
+
+const upload = multer({
+  storage: multerStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'));
+    }
+  }
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Ensure upload directory exists
+  await fs.mkdir(uploadDir, { recursive: true });
+  
+  // Serve uploaded files statically
+  app.use('/uploads', (req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  });
+  app.use('/uploads', express.static(uploadDir));
   // Auth
   app.post("/api/auth/login", async (req, res) => {
     try {
@@ -30,7 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/pages/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
-      const page = await storage.getPageBySlug(slug);
+      const page = await dbStorage.getPageBySlug(slug);
       
       if (!page) {
         return res.status(404).json({ message: "Page not found" });
@@ -45,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/pages", async (req, res) => {
     try {
       const validatedData = insertPageSchema.parse(req.body);
-      const page = await storage.createPage(validatedData);
+      const page = await dbStorage.createPage(validatedData);
       res.status(201).json(page);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -59,7 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/layout-blocks/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
-      const blocks = await storage.getLayoutBlocksByPageSlug(slug);
+      const blocks = await dbStorage.getLayoutBlocksByPageSlug(slug);
       res.json(blocks);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -69,7 +110,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/layout-blocks", async (req, res) => {
     try {
       const validatedData = insertLayoutBlockSchema.parse(req.body);
-      const block = await storage.createLayoutBlock(validatedData);
+      const block = await dbStorage.createLayoutBlock(validatedData);
       res.status(201).json(block);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -84,7 +125,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const updates = req.body;
       
-      const block = await storage.updateLayoutBlock(id, updates);
+      const block = await dbStorage.updateLayoutBlock(id, updates);
       
       if (!block) {
         return res.status(404).json({ message: "Block not found" });
@@ -99,7 +140,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/layout-blocks/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const success = await storage.deleteLayoutBlock(id);
+      const success = await dbStorage.deleteLayoutBlock(id);
       
       if (!success) {
         return res.status(404).json({ message: "Block not found" });
@@ -124,7 +165,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         order: index + 1
       }));
       
-      await storage.reorderLayoutBlocks(reorderData);
+      await dbStorage.reorderLayoutBlocks(reorderData);
       res.json({ message: "Blocks reordered successfully" });
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -134,7 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Testimonials
   app.get("/api/testimonials", async (req, res) => {
     try {
-      const testimonials = await storage.getTestimonials();
+      const testimonials = await dbStorage.getTestimonials();
       res.json(testimonials);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -144,7 +185,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/testimonials", async (req, res) => {
     try {
       const validatedData = insertTestimonialSchema.parse(req.body);
-      const testimonial = await storage.createTestimonial(validatedData);
+      const testimonial = await dbStorage.createTestimonial(validatedData);
       res.status(201).json(testimonial);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -159,7 +200,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const updates = req.body;
       
-      const testimonial = await storage.updateTestimonial(id, updates);
+      const testimonial = await dbStorage.updateTestimonial(id, updates);
       
       if (!testimonial) {
         return res.status(404).json({ message: "Testimonial not found" });
@@ -174,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/testimonials/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const success = await storage.deleteTestimonial(id);
+      const success = await dbStorage.deleteTestimonial(id);
       
       if (!success) {
         return res.status(404).json({ message: "Testimonial not found" });
@@ -189,7 +230,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Gallery Images
   app.get("/api/gallery", async (req, res) => {
     try {
-      const images = await storage.getGalleryImages();
+      const images = await dbStorage.getGalleryImages();
       res.json(images);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -199,7 +240,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/gallery", async (req, res) => {
     try {
       const validatedData = insertGalleryImageSchema.parse(req.body);
-      const image = await storage.createGalleryImage(validatedData);
+      const image = await dbStorage.createGalleryImage(validatedData);
       res.status(201).json(image);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -214,7 +255,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const updates = req.body;
       
-      const image = await storage.updateGalleryImage(id, updates);
+      const image = await dbStorage.updateGalleryImage(id, updates);
       
       if (!image) {
         return res.status(404).json({ message: "Gallery image not found" });
@@ -229,7 +270,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/gallery/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const success = await storage.deleteGalleryImage(id);
+      const success = await dbStorage.deleteGalleryImage(id);
       
       if (!success) {
         return res.status(404).json({ message: "Gallery image not found" });
@@ -247,7 +288,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { email, password } = req.body;
       
       // In a real app, you'd verify the password hash
-      const user = await storage.getUserByEmail(email);
+      const user = await dbStorage.getUserByEmail(email);
       
       if (!user || password !== 'admin123') { // Simple demo auth
         return res.status(401).json({ message: "Invalid credentials" });
@@ -260,6 +301,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
           role: user.role 
         } 
       });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // File Upload
+  app.post("/api/upload", upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const fileData = {
+        filename: req.file.filename,
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        path: req.file.path,
+        url: `/uploads/${req.file.filename}`,
+        uploadedBy: null, // Would be from session in real app
+      };
+
+      const uploadedFile = await dbStorage.createUploadedFile(fileData);
+      res.json({ 
+        url: uploadedFile.url,
+        id: uploadedFile.id,
+        filename: uploadedFile.filename 
+      });
+    } catch (error) {
+      console.error('Upload error:', error);
+      res.status(500).json({ message: "Upload failed" });
+    }
+  });
+
+  // Header Configuration
+  app.get("/api/header-config", async (req, res) => {
+    try {
+      const config = await dbStorage.getHeaderConfig();
+      res.json(config || {});
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/header-config", async (req, res) => {
+    try {
+      const validatedData = insertHeaderConfigSchema.parse(req.body);
+      const config = await dbStorage.createHeaderConfig(validatedData);
+      res.status(201).json(config);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.patch("/api/header-config/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      
+      const config = await dbStorage.updateHeaderConfig(id, updates);
+      
+      if (!config) {
+        return res.status(404).json({ message: "Header config not found" });
+      }
+      
+      res.json(config);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }
