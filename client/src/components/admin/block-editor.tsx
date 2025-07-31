@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ImageUpload } from '@/components/ui/image-upload';
 import type { LayoutBlock } from '@shared/schema';
 
 interface BlockEditorProps {
@@ -56,16 +57,11 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
                 className="mt-1"
               />
             </div>
-            <div>
-              <Label htmlFor="imageUrl">Image URL</Label>
-              <Input
-                id="imageUrl"
-                type="url"
-                value={content.imageUrl || ''}
-                onChange={(e) => updateContent('imageUrl', e.target.value)}
-                className="mt-1"
-              />
-            </div>
+            <ImageUpload
+              label="Hero Image"
+              value={content.imageUrl || ''}
+              onChange={(url) => updateContent('imageUrl', url)}
+            />
           </>
         );
 
@@ -109,6 +105,11 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
                 className="mt-1"
               />
             </div>
+            <ImageUpload
+              label="About Section Image"
+              value={content.imageUrl || ''}
+              onChange={(url) => updateContent('imageUrl', url)}
+            />
           </>
         );
 
@@ -223,16 +224,11 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
                 className="mt-1"
               />
             </div>
-            <div>
-              <Label htmlFor="imageUrl">Image URL</Label>
-              <Input
-                id="imageUrl"
-                type="url"
-                value={content.imageUrl || ''}
-                onChange={(e) => updateContent('imageUrl', e.target.value)}
-                className="mt-1"
-              />
-            </div>
+            <ImageUpload
+              label="Section Image"
+              value={content.imageUrl || ''}
+              onChange={(url) => updateContent('imageUrl', url)}
+            />
             <div>
               <Label htmlFor="alt">Alt Text</Label>
               <Input

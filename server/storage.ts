@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Page, type InsertPage, type LayoutBlock, type InsertLayoutBlock, type Testimonial, type InsertTestimonial, type GalleryImage, type InsertGalleryImage } from "@shared/schema";
+import { type User, type InsertUser, type Page, type InsertPage, type LayoutBlock, type InsertLayoutBlock, type Testimonial, type InsertTestimonial, type GalleryImage, type InsertGalleryImage, type UploadedFile, type InsertUploadedFile, type HeaderConfig, type InsertHeaderConfig } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -33,6 +33,17 @@ export interface IStorage {
   createGalleryImage(image: InsertGalleryImage): Promise<GalleryImage>;
   updateGalleryImage(id: string, updates: Partial<GalleryImage>): Promise<GalleryImage | undefined>;
   deleteGalleryImage(id: string): Promise<boolean>;
+
+  // File Uploads
+  getUploadedFile(id: string): Promise<UploadedFile | undefined>;
+  getUploadedFiles(): Promise<UploadedFile[]>;
+  createUploadedFile(file: InsertUploadedFile): Promise<UploadedFile>;
+  deleteUploadedFile(id: string): Promise<boolean>;
+
+  // Header Configuration
+  getHeaderConfig(): Promise<HeaderConfig | undefined>;
+  createHeaderConfig(config: InsertHeaderConfig): Promise<HeaderConfig>;
+  updateHeaderConfig(id: string, updates: Partial<HeaderConfig>): Promise<HeaderConfig | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -41,6 +52,8 @@ export class MemStorage implements IStorage {
   private layoutBlocks: Map<string, LayoutBlock> = new Map();
   private testimonials: Map<string, Testimonial> = new Map();
   private galleryImages: Map<string, GalleryImage> = new Map();
+  private uploadedFiles: Map<string, UploadedFile> = new Map();
+  private headerConfigs: Map<string, HeaderConfig> = new Map();
 
   constructor() {
     this.initializeDefaultData();
@@ -338,6 +351,89 @@ export class MemStorage implements IStorage {
 
   async deleteGalleryImage(id: string): Promise<boolean> {
     return this.galleryImages.delete(id);
+  }
+
+  // File Uploads
+  async getUploadedFile(id: string): Promise<UploadedFile | undefined> {
+    return this.uploadedFiles.get(id);
+  }
+
+  async getUploadedFiles(): Promise<UploadedFile[]> {
+    return Array.from(this.uploadedFiles.values())
+      .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
+  }
+
+  async createUploadedFile(insertFile: InsertUploadedFile): Promise<UploadedFile> {
+    const file: UploadedFile = {
+      ...insertFile,
+      id: randomUUID(),
+      uploadedBy: insertFile.uploadedBy || null,
+      createdAt: new Date(),
+    };
+    this.uploadedFiles.set(file.id, file);
+    return file;
+  }
+
+  async deleteUploadedFile(id: string): Promise<boolean> {
+    return this.uploadedFiles.delete(id);
+  }
+
+  // Header Configuration
+  async getHeaderConfig(): Promise<HeaderConfig | undefined> {
+    const configs = Array.from(this.headerConfigs.values());
+    return configs.find(config => config.isActive);
+  }
+
+  async createHeaderConfig(insertConfig: InsertHeaderConfig): Promise<HeaderConfig> {
+    // Deactivate existing active configs
+    const configs = Array.from(this.headerConfigs.values());
+    for (const config of configs) {
+      if (config.isActive) {
+        this.headerConfigs.set(config.id, { ...config, isActive: false });
+      }
+    }
+
+    const config: HeaderConfig = {
+      id: randomUUID(),
+      logoUrl: insertConfig.logoUrl || null,
+      logoAlt: insertConfig.logoAlt || 'Logo',
+      navigationItems: insertConfig.navigationItems || [],
+      contactPhone: insertConfig.contactPhone || null,
+      contactText: insertConfig.contactText || null,
+      ctaText: insertConfig.ctaText || null,
+      ctaLink: insertConfig.ctaLink || null,
+      backgroundColor: insertConfig.backgroundColor || '#ffffff',
+      backgroundType: insertConfig.backgroundType || 'solid',
+      backgroundImage: insertConfig.backgroundImage || null,
+      gradientFrom: insertConfig.gradientFrom || null,
+      gradientTo: insertConfig.gradientTo || null,
+      textColor: insertConfig.textColor || '#000000',
+      linkColor: insertConfig.linkColor || '#2563eb',
+      linkHoverColor: insertConfig.linkHoverColor || '#1d4ed8',
+      isActive: insertConfig.isActive ?? true,
+      updatedAt: new Date(),
+    };
+    this.headerConfigs.set(config.id, config);
+    return config;
+  }
+
+  async updateHeaderConfig(id: string, updates: Partial<HeaderConfig>): Promise<HeaderConfig | undefined> {
+    const config = this.headerConfigs.get(id);
+    if (!config) return undefined;
+
+    // If setting this one to active, deactivate others
+    if (updates.isActive) {
+      const configs = Array.from(this.headerConfigs.values());
+      for (const existingConfig of configs) {
+        if (existingConfig.id !== id && existingConfig.isActive) {
+          this.headerConfigs.set(existingConfig.id, { ...existingConfig, isActive: false });
+        }
+      }
+    }
+    
+    const updatedConfig = { ...config, ...updates, updatedAt: new Date() };
+    this.headerConfigs.set(id, updatedConfig);
+    return updatedConfig;
   }
 }
 
