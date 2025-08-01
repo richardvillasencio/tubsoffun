@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ImageUpload } from '@/components/ui/image-upload';
+import { MediaUpload } from '@/components/ui/media-upload';
 import { cn } from '@/lib/utils';
 
 interface BackgroundEditorProps {
@@ -51,6 +51,10 @@ export function BackgroundEditor({
     });
   };
 
+  const isVideo = (url: string) => {
+    return url?.match(/\.(mp4|webm|ogg|mov|avi|mkv)$/i);
+  };
+
   const generatePreviewStyle = () => {
     switch (backgroundType) {
       case 'solid':
@@ -60,13 +64,17 @@ export function BackgroundEditor({
           background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` 
         };
       case 'image':
-        return backgroundImage 
-          ? { 
-              backgroundImage: `url(${backgroundImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }
-          : { backgroundColor: '#f3f4f6' };
+        if (!backgroundImage) {
+          return { backgroundColor: '#f3f4f6' };
+        }
+        if (isVideo(backgroundImage)) {
+          return { backgroundColor: '#000000', position: 'relative' as const };
+        }
+        return { 
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        };
       default:
         return { backgroundColor };
     }
@@ -92,9 +100,20 @@ export function BackgroundEditor({
         <div className="flex items-center space-x-4 mb-4">
           <Label className="text-sm font-medium">Preview:</Label>
           <div 
-            className="w-16 h-8 rounded border shadow-sm"
+            className="w-16 h-8 rounded border shadow-sm overflow-hidden relative"
             style={generatePreviewStyle()}
-          />
+          >
+            {backgroundType === 'image' && backgroundImage && isVideo(backgroundImage) && (
+              <video 
+                src={backgroundImage}
+                className="w-full h-full object-cover"
+                muted
+                loop
+                autoPlay
+                style={{ position: 'absolute', top: 0, left: 0 }}
+              />
+            )}
+          </div>
         </div>
 
         {backgroundType === 'solid' && (
@@ -163,10 +182,11 @@ export function BackgroundEditor({
         )}
 
         {backgroundType === 'image' && (
-          <ImageUpload
+          <MediaUpload
             value={backgroundImage}
             onChange={(url) => handleColorChange('backgroundImage', url)}
-            label="Background Image"
+            label="Background Media"
+            allowVideo={true}
           />
         )}
       </div>
