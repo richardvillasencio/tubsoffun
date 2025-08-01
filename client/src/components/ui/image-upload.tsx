@@ -21,7 +21,7 @@ export function ImageUpload({
   label = "Image", 
   className,
   accept = "image/*",
-  maxSize = 5 * 1024 * 1024 // 5MB default
+  maxSize = 10 * 1024 * 1024 // 10MB default
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -118,7 +118,7 @@ export function ImageUpload({
           <TabsContent value="upload" className="space-y-4">
             <div
               className={cn(
-                "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
+                "border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer",
                 dragActive ? "border-primary bg-primary/5" : "border-gray-300",
                 isUploading && "opacity-50 pointer-events-none"
               )}
@@ -132,6 +132,7 @@ export function ImageUpload({
               }}
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDrop}
+              onClick={() => document.getElementById('file-upload')?.click()}
             >
               {isUploading ? (
                 <div className="space-y-2">
@@ -152,12 +153,17 @@ export function ImageUpload({
                     className="hidden"
                     id="file-upload"
                   />
-                  <Label htmlFor="file-upload" asChild>
-                    <Button type="button" variant="outline">
-                      <Upload className="h-4 w-4 mr-2" />
-                      Choose File
-                    </Button>
-                  </Label>
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      document.getElementById('file-upload')?.click();
+                    }}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Choose File
+                  </Button>
                   <p className="text-xs text-gray-500">
                     Max file size: {maxSize / 1024 / 1024}MB
                   </p>

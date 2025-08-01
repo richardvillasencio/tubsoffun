@@ -38,8 +38,34 @@ export function Navigation() {
   const ctaLink = headerConfig?.ctaLink || "/contact";
 
   // Generate dynamic styles based on header config
-  const getHeaderStyles = () => {
-    if (!headerConfig) return {};
+  const getTopBarStyles = () => {
+    if (!headerConfig) return { backgroundColor: '#2dd4bf', color: '#ffffff' };
+    
+    const styles: any = {};
+    
+    if (headerConfig.topBarBackgroundType === 'solid' && headerConfig.topBarBackgroundColor) {
+      styles.backgroundColor = headerConfig.topBarBackgroundColor;
+    } else if (headerConfig.topBarBackgroundType === 'gradient' && headerConfig.topBarGradientFrom && headerConfig.topBarGradientTo) {
+      styles.background = `linear-gradient(135deg, ${headerConfig.topBarGradientFrom}, ${headerConfig.topBarGradientTo})`;
+    } else if (headerConfig.topBarBackgroundType === 'image' && headerConfig.topBarBackgroundImage) {
+      styles.backgroundImage = `url(${headerConfig.topBarBackgroundImage})`;
+      styles.backgroundSize = 'cover';
+      styles.backgroundPosition = 'center';
+    } else {
+      styles.backgroundColor = headerConfig.topBarBackgroundColor || '#2dd4bf';
+    }
+    
+    if (headerConfig.topBarTextColor) {
+      styles.color = headerConfig.topBarTextColor;
+    } else {
+      styles.color = '#ffffff';
+    }
+    
+    return styles;
+  };
+
+  const getMainNavStyles = () => {
+    if (!headerConfig) return { backgroundColor: '#f97316', color: '#ffffff' };
     
     const styles: any = {};
     
@@ -51,10 +77,16 @@ export function Navigation() {
       styles.backgroundImage = `url(${headerConfig.backgroundImage})`;
       styles.backgroundSize = 'cover';
       styles.backgroundPosition = 'center';
+    } else {
+      styles.backgroundColor = headerConfig.mainNavBackgroundColor || '#f97316';
     }
     
     if (headerConfig.textColor) {
       styles.color = headerConfig.textColor;
+    } else if (headerConfig.mainNavTextColor) {
+      styles.color = headerConfig.mainNavTextColor;
+    } else {
+      styles.color = '#ffffff';
     }
     
     return styles;
@@ -72,10 +104,7 @@ export function Navigation() {
       {headerConfig?.topBarEnabled !== false && (
         <div 
           className="text-white"
-          style={{ 
-            backgroundColor: headerConfig?.topBarBackgroundColor || '#2dd4bf',
-            color: headerConfig?.topBarTextColor || '#ffffff'
-          }}
+          style={getTopBarStyles()}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-10 text-sm">
@@ -103,7 +132,7 @@ export function Navigation() {
                           </svg>
                         )}
                       </Link>
-                      {index < headerConfig.topBarLinks.length - 1 && <span className="opacity-60">|</span>}
+                      {index < (headerConfig.topBarLinks as Array<any>).length - 1 && <span className="opacity-60">|</span>}
                     </div>
                   )) :
                   <>
@@ -137,10 +166,7 @@ export function Navigation() {
       {/* Main Navigation - Customizable Section */}
       <div 
         className="text-white shadow-lg"
-        style={{ 
-          backgroundColor: headerConfig?.mainNavBackgroundColor || '#f97316',
-          color: headerConfig?.mainNavTextColor || '#ffffff'
-        }}
+        style={getMainNavStyles()}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">

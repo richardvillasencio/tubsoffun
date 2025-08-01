@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ImageUpload } from '@/components/ui/image-upload';
+import { MediaUpload } from '@/components/ui/media-upload';
 import type { LayoutBlock } from '@shared/schema';
 
 interface BlockEditorProps {
@@ -80,10 +81,11 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
                 placeholder="View Products"
               />
             </div>
-            <ImageUpload
-              label="Background Image (Upload a high-quality image showing families enjoying pool/spa time)"
+            <MediaUpload
+              label="Background Media (Upload a high-quality image or video showing families enjoying pool/spa time)"
               value={content.imageUrl || ''}
               onChange={(url) => updateContent('imageUrl', url)}
+              allowVideo={true}
             />
             <div>
               <Label htmlFor="overlayOpacity">Background Overlay Opacity</Label>
