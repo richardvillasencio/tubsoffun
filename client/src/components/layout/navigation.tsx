@@ -129,25 +129,25 @@ export function Navigation() {
       {headerConfig?.topBarEnabled !== false && (
         <div className="text-white" style={getTopBarStyles()}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center h-12 text-sm">
-              {/* Left side - Contact Info and Menu Links */}
-              <div className="flex items-center space-x-4 flex-1">
+            <div className="flex items-center justify-between h-12 text-sm">
+              {/* Left side - Phone only */}
+              <div className="flex items-center">
                 <span className="flex items-center">
                   <Phone className="h-3 w-3 mr-1" />
                   {headerConfig?.topBarPhone || "(701) 234-0705"}
                 </span>
-                
-                {/* White divider line - 1px height, 70% width */}
-                <div className="hidden sm:block w-px h-4 bg-white/60"></div>
-                
+              </div>
+
+              {/* Right side - Address and Menu Links */}
+              <div className="flex items-center space-x-4">
                 <span className="hidden sm:block">
                   📍{" "}
                   {headerConfig?.topBarAddress ||
                     "601 Main Ave W, West Fargo, ND 58078"}
                 </span>
 
-                {/* Top Menu Links - moved to left side */}
-                <div className="hidden md:flex items-center space-x-4 ml-8">
+                {/* Top Menu Links - moved to right side */}
+                <div className="hidden md:flex items-center space-x-4">
                   {headerConfig?.topBarLinks &&
                   Array.isArray(headerConfig.topBarLinks) ? (
                     (
@@ -239,9 +239,24 @@ export function Navigation() {
         </div>
       )}
 
-      {/* Main Navigation - Customizable Section with Large Mascot */}
+      {/* Main Navigation - Customizable Section with Logo and Mascot */}
       <div className="relative" style={getMainNavStyles()}>
-        {/* Large Tubby Mascot - positioned absolutely to span both header sections */}
+        {/* Logo and Emblem - positioned absolutely to span both header sections on LEFT */}
+        <div className="absolute left-8 top-0 transform -translate-y-6 z-10 hidden lg:flex items-center space-x-2">
+          {/* SDYOSR Emblem */}
+          <img 
+            src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
+            alt="SDYOSR Emblem" 
+            className="h-20 w-20 object-contain" 
+          />
+          
+          {/* Main Tubs of Fun Logo */}
+          <Link href="/">
+            <img src={logoUrl} alt={logoAlt} className="h-20 w-auto" />
+          </Link>
+        </div>
+
+        {/* Large Tubby Mascot - positioned absolutely to span both header sections on RIGHT */}
         <div className="absolute right-8 top-0 transform -translate-y-6 z-10 hidden lg:block">
           <img
             src={
@@ -254,28 +269,21 @@ export function Navigation() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-20">
-            {/* Logo Section - Left side with emblem and main logo */}
-            <div className="flex items-center space-x-4 flex-shrink-0">
-              {/* SDYOSR Emblem */}
-              <div className="flex-shrink-0">
-                <img 
-                  src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
-                  alt="SDYOSR Emblem" 
-                  className="h-16 w-16 object-contain" 
-                />
-              </div>
-              
-              {/* Main Tubs of Fun Logo */}
-              <div className="flex-shrink-0">
-                <Link href="/">
-                  <img src={logoUrl} alt={logoAlt} className="h-16 w-auto" />
-                </Link>
-              </div>
+          <div className="flex items-center justify-between h-20">
+            {/* Mobile logo for small screens */}
+            <div className="lg:hidden flex items-center space-x-2">
+              <img 
+                src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
+                alt="SDYOSR Emblem" 
+                className="h-12 w-12 object-contain" 
+              />
+              <Link href="/">
+                <img src={logoUrl} alt={logoAlt} className="h-12 w-auto" />
+              </Link>
             </div>
 
             {/* Main Navigation - Center */}
-            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center pr-24">
+            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center">
               {/* HOT TUBS */}
               <div className="relative group">
                 <Link
