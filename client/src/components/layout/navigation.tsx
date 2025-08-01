@@ -154,9 +154,7 @@ export function Navigation() {
                   </>
                 }
                 {/* Mascot Character */}
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                  🏊
-                </div>
+               
               </div>
             </div>
           </div>
