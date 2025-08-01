@@ -170,19 +170,31 @@ export function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex items-center">
-              <Link href="/">
+            {/* Logo Section - Left side with emblem and main logo */}
+            <div className="flex items-center space-x-4">
+              {/* SDYOSR Emblem */}
+              <div className="flex-shrink-0">
                 <img 
-                  src={logoUrl} 
-                  alt={logoAlt} 
-                  className="h-12 w-auto" 
+                  src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
+                  alt="SDYOSR Emblem" 
+                  className="h-12 w-12 object-contain" 
                 />
-              </Link>
+              </div>
+              
+              {/* Main Tubs of Fun Logo */}
+              <div className="flex-shrink-0">
+                <Link href="/">
+                  <img 
+                    src={logoUrl} 
+                    alt={logoAlt} 
+                    className="h-12 w-auto" 
+                  />
+                </Link>
+              </div>
             </div>
 
-            {/* Main Navigation */}
-            <div className="hidden lg:flex items-center space-x-0">
+            {/* Main Navigation - Center */}
+            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center">
               {/* HOT TUBS */}
               <div className="relative group">
                 <Link href="/hot-tubs" className="px-4 py-4 text-white hover:bg-orange-600 transition-colors font-medium flex items-center border-r border-orange-300">
@@ -241,6 +253,17 @@ export function Navigation() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </Link>
+              </div>
+            </div>
+
+            {/* Right side - Tubby Mascot */}
+            <div className="hidden lg:flex items-center">
+              <div className="flex-shrink-0">
+                <img 
+                  src={headerConfig?.mascotUrl || "/uploads/file-1754062130457-246269446.webp"} 
+                  alt="Tubby Mascot" 
+                  className="h-12 w-12 object-contain" 
+                />
               </div>
             </div>
 

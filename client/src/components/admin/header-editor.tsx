@@ -18,6 +18,10 @@ interface HeaderConfigData {
   id?: string;
   logoUrl?: string;
   logoAlt?: string;
+  emblemUrl?: string;
+  emblemAlt?: string;
+  mascotUrl?: string;
+  mascotAlt?: string;
   navigationItems?: NavigationItem[];
   contactPhone?: string;
   contactText?: string;
@@ -201,20 +205,65 @@ export function HeaderEditor() {
             <CardHeader>
               <CardTitle>Logo & Branding</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <ImageUpload
-                label="Logo"
-                value={config.logoUrl || ''}
-                onChange={(url) => updateConfig('logoUrl', url)}
-              />
-              <div>
-                <Label htmlFor="logoAlt">Logo Alt Text</Label>
-                <Input
-                  id="logoAlt"
-                  value={config.logoAlt || ''}
-                  onChange={(e) => updateConfig('logoAlt', e.target.value)}
-                  placeholder="Descriptive text for screen readers"
+            <CardContent className="space-y-6">
+              {/* Company Emblem */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Company Emblem (Left Side)</h3>
+                <p className="text-sm text-gray-600">The emblem or badge that appears on the far left of the header</p>
+                <ImageUpload
+                  label="Emblem Image"
+                  value={config.emblemUrl || ''}
+                  onChange={(url) => updateConfig('emblemUrl', url)}
                 />
+                <div>
+                  <Label htmlFor="emblemAlt">Emblem Alt Text</Label>
+                  <Input
+                    id="emblemAlt"
+                    value={config.emblemAlt || ''}
+                    onChange={(e) => updateConfig('emblemAlt', e.target.value)}
+                    placeholder="Company Emblem"
+                  />
+                </div>
+              </div>
+
+              {/* Main Logo */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Main Logo (Center-Left)</h3>
+                <p className="text-sm text-gray-600">The primary company logo that appears next to the emblem</p>
+                <ImageUpload
+                  label="Main Logo"
+                  value={config.logoUrl || ''}
+                  onChange={(url) => updateConfig('logoUrl', url)}
+                />
+                <div>
+                  <Label htmlFor="logoAlt">Logo Alt Text</Label>
+                  <Input
+                    id="logoAlt"
+                    value={config.logoAlt || ''}
+                    onChange={(e) => updateConfig('logoAlt', e.target.value)}
+                    placeholder="Descriptive text for screen readers"
+                  />
+                </div>
+              </div>
+
+              {/* Mascot */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Mascot Character (Right Side)</h3>
+                <p className="text-sm text-gray-600">The mascot character that appears on the far right of the header</p>
+                <ImageUpload
+                  label="Mascot Image"
+                  value={config.mascotUrl || ''}
+                  onChange={(url) => updateConfig('mascotUrl', url)}
+                />
+                <div>
+                  <Label htmlFor="mascotAlt">Mascot Alt Text</Label>
+                  <Input
+                    id="mascotAlt"
+                    value={config.mascotAlt || ''}
+                    onChange={(e) => updateConfig('mascotAlt', e.target.value)}
+                    placeholder="Company Mascot"
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
