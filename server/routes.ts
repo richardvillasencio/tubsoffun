@@ -112,14 +112,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/layout-blocks", async (req, res) => {
     try {
-      const validatedData = insertLayoutBlockSchema.parse(req.body);
       const storage = await getStorage();
+      
+      // Handle pageSlug to pageId conversion
+      if (req.body.pageSlug && !req.body.pageId) {
+        const page = await storage.getPageBySlug(req.body.pageSlug);
+        if (!page) {
+          return res.status(404).json({ message: "Page not found" });
+        }
+        req.body.pageId = page.id;
+        delete req.body.pageSlug;
+      }
+      
+      const validatedData = insertLayoutBlockSchema.parse(req.body);
       const block = await storage.createLayoutBlock(validatedData);
       res.status(201).json(block);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
       }
+      console.error('Layout block creation error:', error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
