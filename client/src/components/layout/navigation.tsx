@@ -130,23 +130,25 @@ export function Navigation() {
         <div className="text-white" style={getTopBarStyles()}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-12 text-sm">
-              {/* Left side - Phone only */}
-              <div className="flex items-center">
-                <span className="flex items-center">
+              {/* Left side - Phone and Address stacked */}
+              <div className="flex flex-col justify-center h-12">
+                <div className="flex items-center">
                   <Phone className="h-3 w-3 mr-1" />
                   {headerConfig?.topBarPhone || "(701) 234-0705"}
-                </span>
-              </div>
-
-              {/* Right side - Address and Menu Links */}
-              <div className="flex items-center space-x-4">
-                <span className="hidden sm:block">
+                </div>
+                <div className="text-xs mt-0.5">
                   📍{" "}
                   {headerConfig?.topBarAddress ||
                     "601 Main Ave W, West Fargo, ND 58078"}
-                </span>
+                </div>
+              </div>
 
-                {/* Top Menu Links - moved to right side */}
+              {/* Center - White divider line */}
+              <div className="hidden sm:block w-px h-8 bg-white/60"></div>
+
+              {/* Right side - Menu Links */}
+              <div className="flex items-center space-x-4">
+                {/* Top Menu Links */}
                 <div className="hidden md:flex items-center space-x-4">
                   {headerConfig?.topBarLinks &&
                   Array.isArray(headerConfig.topBarLinks) ? (
@@ -283,7 +285,7 @@ export function Navigation() {
             </div>
 
             {/* Main Navigation - Center */}
-            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center">
+            <div className="hidden lg:flex items-center space-x-0 absolute inset-x-0 justify-center">
               {/* HOT TUBS */}
               <div className="relative group">
                 <Link
