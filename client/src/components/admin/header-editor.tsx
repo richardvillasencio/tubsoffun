@@ -27,7 +27,11 @@ interface HeaderConfigData {
   topBarEnabled?: boolean;
   topBarPhone?: string;
   topBarAddress?: string;
+  topBarBackgroundType?: 'solid' | 'gradient' | 'image';
   topBarBackgroundColor?: string;
+  topBarBackgroundImage?: string;
+  topBarGradientFrom?: string;
+  topBarGradientTo?: string;
   topBarTextColor?: string;
   topBarLinks?: NavigationItem[];
   // Main navigation fields  
@@ -65,7 +69,11 @@ export function HeaderEditor() {
     topBarEnabled: true,
     topBarPhone: '(701) 234-0705',
     topBarAddress: '601 Main Ave W, West Fargo, ND 58078',
+    topBarBackgroundType: 'solid',
     topBarBackgroundColor: '#2dd4bf',
+    topBarBackgroundImage: '',
+    topBarGradientFrom: '#2dd4bf',
+    topBarGradientTo: '#0d9488',
     topBarTextColor: '#ffffff',
     topBarLinks: [
       { name: 'Contact Us', href: '/contact' },
@@ -250,23 +258,39 @@ export function HeaderEditor() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="topBarBackgroundColor">Background Color</Label>
-                  <Input
-                    id="topBarBackgroundColor"
-                    type="color"
-                    value={config.topBarBackgroundColor || '#2dd4bf'}
-                    onChange={(e) => updateConfig('topBarBackgroundColor', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="topBarTextColor">Text Color</Label>
+              <BackgroundEditor
+                backgroundType={config.topBarBackgroundType || 'solid'}
+                backgroundColor={config.topBarBackgroundColor}
+                backgroundImage={config.topBarBackgroundImage}
+                gradientFrom={config.topBarGradientFrom}
+                gradientTo={config.topBarGradientTo}
+                onChange={(backgroundConfig) => {
+                  setConfig(prev => ({ 
+                    ...prev, 
+                    topBarBackgroundType: backgroundConfig.backgroundType,
+                    topBarBackgroundColor: backgroundConfig.backgroundColor,
+                    topBarBackgroundImage: backgroundConfig.backgroundImage,
+                    topBarGradientFrom: backgroundConfig.gradientFrom,
+                    topBarGradientTo: backgroundConfig.gradientTo
+                  }));
+                }}
+              />
+              
+              <div>
+                <Label htmlFor="topBarTextColor">Text Color</Label>
+                <div className="flex space-x-2 mt-1">
                   <Input
                     id="topBarTextColor"
                     type="color"
                     value={config.topBarTextColor || '#ffffff'}
                     onChange={(e) => updateConfig('topBarTextColor', e.target.value)}
+                    className="w-16 h-10 p-1 border rounded"
+                  />
+                  <Input
+                    type="text"
+                    value={config.topBarTextColor || '#ffffff'}
+                    onChange={(e) => updateConfig('topBarTextColor', e.target.value)}
+                    className="flex-1"
                   />
                 </div>
               </div>

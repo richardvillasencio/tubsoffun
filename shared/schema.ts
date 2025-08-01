@@ -79,7 +79,11 @@ export const headerConfig = pgTable("header_config", {
   topBarEnabled: boolean("top_bar_enabled").default(true),
   topBarPhone: text("top_bar_phone").default("(701) 234-0705"),
   topBarAddress: text("top_bar_address").default("601 Main Ave W, West Fargo, ND 58078"),
+  topBarBackgroundType: text("top_bar_background_type").default("solid"), // solid, gradient, image
   topBarBackgroundColor: text("top_bar_background_color").default("#2dd4bf"),
+  topBarBackgroundImage: text("top_bar_background_image"),
+  topBarGradientFrom: text("top_bar_gradient_from"),
+  topBarGradientTo: text("top_bar_gradient_to"),
   topBarTextColor: text("top_bar_text_color").default("#ffffff"),
   topBarLinks: json("top_bar_links").default([]),
   // Main navigation fields
@@ -157,7 +161,11 @@ export const insertHeaderConfigSchema = createInsertSchema(headerConfig).pick({
   topBarEnabled: true,
   topBarPhone: true,
   topBarAddress: true,
+  topBarBackgroundType: true,
   topBarBackgroundColor: true,
+  topBarBackgroundImage: true,
+  topBarGradientFrom: true,
+  topBarGradientTo: true,
   topBarTextColor: true,
   topBarLinks: true,
   mainNavBackgroundColor: true,
