@@ -172,8 +172,6 @@ export function Navigation() {
           <div className="flex items-center justify-between h-20">
             {/* Logo Section - Left side with emblem and main logo */}
             <div className="flex items-center space-x-4 flex-shrink-0">
-              
-              
               {/* Main Tubs of Fun Logo */}
               <div className="flex-shrink-0">
                 <Link href="/">
