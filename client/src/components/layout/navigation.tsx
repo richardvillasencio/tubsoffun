@@ -169,9 +169,9 @@ export function Navigation() {
         style={getMainNavStyles()}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex items-center h-16">
             {/* Logo Section - Left side with emblem and main logo */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 flex-shrink-0">
               {/* SDYOSR Emblem */}
               <div className="flex-shrink-0">
                 <img 
@@ -194,7 +194,7 @@ export function Navigation() {
             </div>
 
             {/* Main Navigation - Center */}
-            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center">
+            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center mx-8">
               {/* HOT TUBS */}
               <div className="relative group">
                 <Link href="/hot-tubs" className="px-4 py-4 text-white hover:bg-orange-600 transition-colors font-medium flex items-center border-r border-orange-300">
@@ -257,7 +257,7 @@ export function Navigation() {
             </div>
 
             {/* Right side - Tubby Mascot */}
-            <div className="hidden lg:flex items-center">
+            <div className="hidden lg:flex items-center flex-shrink-0">
               <div className="flex-shrink-0">
                 <img 
                   src={headerConfig?.mascotUrl || "/uploads/file-1754062130457-246269446.webp"} 
