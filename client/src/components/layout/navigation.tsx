@@ -154,7 +154,9 @@ export function Navigation() {
                   </>
                 }
                 {/* Mascot Character */}
-               
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                  🏊
+                </div>
               </div>
             </div>
           </div>
@@ -170,6 +172,8 @@ export function Navigation() {
           <div className="flex items-center justify-between h-20">
             {/* Logo Section - Left side with emblem and main logo */}
             <div className="flex items-center space-x-4 flex-shrink-0">
+              
+              
               {/* Main Tubs of Fun Logo */}
               <div className="flex-shrink-0">
                 <Link href="/">
