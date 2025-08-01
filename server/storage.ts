@@ -1,29 +1,41 @@
 import { type User, type InsertUser, type Page, type InsertPage, type LayoutBlock, type InsertLayoutBlock, type Testimonial, type InsertTestimonial, type GalleryImage, type InsertGalleryImage, type UploadedFile, type InsertUploadedFile, type HeaderConfig, type InsertHeaderConfig } from "@shared/schema";
 import { randomUUID } from "crypto";
+
 // Conditional imports for database functionality
 let db: any = null;
 let users: any, pages: any, layoutBlocks: any, testimonials: any, galleryImages: any, uploadedFiles: any, headerConfig: any;
 let eq: any = null;
 
-// Only import database modules if DATABASE_URL is set
-if (process.env.DATABASE_URL) {
-  try {
-    const dbModule = require("./db");
-    db = dbModule.db;
-    const schemaModule = require("@shared/schema");
-    users = schemaModule.users;
-    pages = schemaModule.pages;
-    layoutBlocks = schemaModule.layoutBlocks;
-    testimonials = schemaModule.testimonials;
-    galleryImages = schemaModule.galleryImages;
-    uploadedFiles = schemaModule.uploadedFiles;
-    headerConfig = schemaModule.headerConfig;
-    const drizzleModule = require("drizzle-orm");
-    eq = drizzleModule.eq;
-  } catch (error) {
-    console.warn("Database modules not available, using memory storage");
+// Initialize database connection
+async function initializeDatabase() {
+  if (process.env.DATABASE_URL) {
+    try {
+      // Import database modules dynamically
+      const dbModule = await import("./db.js");
+      db = dbModule.db;
+      const schemaModule = await import("@shared/schema");
+      users = schemaModule.users;
+      pages = schemaModule.pages;
+      layoutBlocks = schemaModule.layoutBlocks;
+      testimonials = schemaModule.testimonials;
+      galleryImages = schemaModule.galleryImages;
+      uploadedFiles = schemaModule.uploadedFiles;
+      headerConfig = schemaModule.headerConfig;
+      const drizzleModule = await import("drizzle-orm");
+      eq = drizzleModule.eq;
+      console.log("Database modules loaded successfully");
+      return true;
+    } catch (error) {
+      console.warn("Database modules not available, using memory storage. Error:", error);
+      db = null;
+      return false;
+    }
   }
+  return false;
 }
+
+// Initialize database on startup
+const dbInitPromise = initializeDatabase();
 
 export interface IStorage {
   // Users
@@ -426,6 +438,20 @@ export class MemStorage implements IStorage {
       contactText: insertConfig.contactText || null,
       ctaText: insertConfig.ctaText || null,
       ctaLink: insertConfig.ctaLink || null,
+      // Top bar fields
+      topBarEnabled: insertConfig.topBarEnabled ?? true,
+      topBarPhone: insertConfig.topBarPhone || '(701) 234-0705',
+      topBarAddress: insertConfig.topBarAddress || '601 Main Ave W, West Fargo, ND 58078',
+      topBarBackgroundType: insertConfig.topBarBackgroundType || 'solid',
+      topBarBackgroundColor: insertConfig.topBarBackgroundColor || '#2dd4bf',
+      topBarBackgroundImage: insertConfig.topBarBackgroundImage || null,
+      topBarGradientFrom: insertConfig.topBarGradientFrom || null,
+      topBarGradientTo: insertConfig.topBarGradientTo || null,
+      topBarTextColor: insertConfig.topBarTextColor || '#ffffff',
+      topBarLinks: insertConfig.topBarLinks || [],
+      // Main navigation fields
+      mainNavBackgroundColor: insertConfig.mainNavBackgroundColor || '#f97316',
+      mainNavTextColor: insertConfig.mainNavTextColor || '#ffffff',
       backgroundColor: insertConfig.backgroundColor || '#ffffff',
       backgroundType: insertConfig.backgroundType || 'solid',
       backgroundImage: insertConfig.backgroundImage || null,
@@ -665,6 +691,29 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Use database storage if DATABASE_URL is provided, otherwise fallback to memory storage
-const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
+// Storage factory function
+async function createStorage(): Promise<IStorage> {
+  if (process.env.DATABASE_URL) {
+    await dbInitPromise; // Wait for database initialization
+    if (db) {
+      return new DatabaseStorage();
+    }
+  }
+  return new MemStorage();
+}
+
+// Initialize storage
+let storage: IStorage | null = null;
+const storagePromise = createStorage().then(s => {
+  storage = s;
+  return s;
+});
+
+// Export storage getter
+export async function getStorage(): Promise<IStorage> {
+  if (storage) return storage;
+  return await storagePromise;
+}
+
+// Export storage for backward compatibility (will be memory storage initially)
 export { storage };
