@@ -21,7 +21,7 @@ export function ImageUpload({
   label = "Image", 
   className,
   accept = "image/*",
-  maxSize = 5 * 1024 * 1024 // 5MB default
+  maxSize = 10 * 1024 * 1024 // 10MB default
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);

@@ -22,7 +22,7 @@ export function MediaUpload({
   label = "Media", 
   className,
   accept = "image/*,video/*",
-  maxSize = 50 * 1024 * 1024, // 50MB default for videos
+  maxSize = 10 * 1024 * 1024, // 10MB default
   allowVideo = true
 }: MediaUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
