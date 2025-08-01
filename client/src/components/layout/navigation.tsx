@@ -194,7 +194,7 @@ export function Navigation() {
             </div>
 
             {/* Main Navigation - Center */}
-            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center mx-8">
+            <div className="hidden lg:flex items-center ml-[242px] mr-[242px] pl-[-7px] pr-[-7px]">
               {/* HOT TUBS */}
               <div className="relative group">
                 <Link href="/hot-tubs" className="px-4 py-4 text-white hover:bg-orange-600 transition-colors font-medium flex items-center border-r border-orange-300">
