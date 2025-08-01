@@ -1,12 +1,18 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ImageUpload } from '@/components/ui/image-upload';
-import { MediaUpload } from '@/components/ui/media-upload';
-import type { LayoutBlock } from '@shared/schema';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ImageUpload } from "@/components/ui/image-upload";
+import { MediaUpload } from "@/components/ui/media-upload";
+import type { LayoutBlock } from "@shared/schema";
 
 interface BlockEditorProps {
   block: LayoutBlock;
@@ -15,27 +21,29 @@ interface BlockEditorProps {
 }
 
 export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
-  const [content, setContent] = useState<Record<string, any>>(block.content as Record<string, any> || {});
+  const [content, setContent] = useState<Record<string, any>>(
+    (block.content as Record<string, any>) || {},
+  );
 
   const handleSave = () => {
     onSave(content);
   };
 
   const updateContent = (key: string, value: any) => {
-    setContent(prev => ({ ...prev, [key]: value }));
+    setContent((prev) => ({ ...prev, [key]: value }));
   };
 
   const renderFieldsByType = () => {
     switch (block.type) {
-      case 'hero':
+      case "hero":
         return (
           <>
             <div>
               <Label htmlFor="title">Main Title</Label>
               <Input
                 id="title"
-                value={content.title || 'FAMILY TIME MADE SIMPLE!!!'}
-                onChange={(e) => updateContent('title', e.target.value)}
+                value={content.title || "FAMILY TIME MADE SIMPLE!!!"}
+                onChange={(e) => updateContent("title", e.target.value)}
                 className="mt-1"
                 placeholder="FAMILY TIME MADE SIMPLE!!!"
               />
@@ -44,8 +52,10 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Label htmlFor="subtitle">Subtitle</Label>
               <Input
                 id="subtitle"
-                value={content.subtitle || 'Let us help you transform your space'}
-                onChange={(e) => updateContent('subtitle', e.target.value)}
+                value={
+                  content.subtitle || "Let us help you transform your space"
+                }
+                onChange={(e) => updateContent("subtitle", e.target.value)}
                 className="mt-1"
                 placeholder="Let us help you transform your space"
               />
@@ -55,8 +65,11 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Textarea
                 id="description"
                 rows={4}
-                value={content.description || 'Our friendly and knowledgeable staff are here to show you our amazing Hot tubs, Swim spas, Pools, Saunas, and more!'}
-                onChange={(e) => updateContent('description', e.target.value)}
+                value={
+                  content.description ||
+                  "Our friendly and knowledgeable staff are here to show you our amazing Hot tubs, Swim spas, Pools, Saunas, and more!"
+                }
+                onChange={(e) => updateContent("description", e.target.value)}
                 className="mt-1"
                 placeholder="Our friendly and knowledgeable staff are here to show you our amazing Hot tubs, Swim spas, Pools, Saunas, and more!"
               />
@@ -65,8 +78,8 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Label htmlFor="ctaPrimary">Primary Button Text</Label>
               <Input
                 id="ctaPrimary"
-                value={content.ctaPrimary || 'Schedule Your Visit'}
-                onChange={(e) => updateContent('ctaPrimary', e.target.value)}
+                value={content.ctaPrimary || "Schedule Your Visit"}
+                onChange={(e) => updateContent("ctaPrimary", e.target.value)}
                 className="mt-1"
                 placeholder="Schedule Your Visit"
               />
@@ -75,21 +88,26 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Label htmlFor="ctaSecondary">Secondary Button Text</Label>
               <Input
                 id="ctaSecondary"
-                value={content.ctaSecondary || 'View Products'}
-                onChange={(e) => updateContent('ctaSecondary', e.target.value)}
+                value={content.ctaSecondary || "View Products"}
+                onChange={(e) => updateContent("ctaSecondary", e.target.value)}
                 className="mt-1"
                 placeholder="View Products"
               />
             </div>
             <MediaUpload
               label="Background Media (Upload a high-quality image or video showing families enjoying pool/spa time)"
-              value={content.imageUrl || ''}
-              onChange={(url) => updateContent('imageUrl', url)}
+              value={content.imageUrl || ""}
+              onChange={(url) => updateContent("imageUrl", url)}
               allowVideo={true}
             />
             <div>
               <Label htmlFor="overlayOpacity">Background Overlay Opacity</Label>
-              <Select value={content.overlayOpacity || '60'} onValueChange={(value) => updateContent('overlayOpacity', value)}>
+              <Select
+                value={content.overlayOpacity || "60"}
+                onValueChange={(value) =>
+                  updateContent("overlayOpacity", value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -104,7 +122,10 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
             </div>
             <div>
               <Label htmlFor="textAlignment">Text Alignment</Label>
-              <Select value={content.textAlignment || 'center'} onValueChange={(value) => updateContent('textAlignment', value)}>
+              <Select
+                value={content.textAlignment || "center"}
+                onValueChange={(value) => updateContent("textAlignment", value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -118,15 +139,15 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
           </>
         );
 
-      case 'about':
+      case "about":
         return (
           <>
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={content.title || ''}
-                onChange={(e) => updateContent('title', e.target.value)}
+                value={content.title || ""}
+                onChange={(e) => updateContent("title", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -134,8 +155,8 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Label htmlFor="subtitle">Subtitle</Label>
               <Input
                 id="subtitle"
-                value={content.subtitle || ''}
-                onChange={(e) => updateContent('subtitle', e.target.value)}
+                value={content.subtitle || ""}
+                onChange={(e) => updateContent("subtitle", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -143,8 +164,8 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Label htmlFor="founderName">Founder Name</Label>
               <Input
                 id="founderName"
-                value={content.founderName || ''}
-                onChange={(e) => updateContent('founderName', e.target.value)}
+                value={content.founderName || ""}
+                onChange={(e) => updateContent("founderName", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -153,28 +174,28 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Textarea
                 id="description"
                 rows={5}
-                value={content.description || ''}
-                onChange={(e) => updateContent('description', e.target.value)}
+                value={content.description || ""}
+                onChange={(e) => updateContent("description", e.target.value)}
                 className="mt-1"
               />
             </div>
             <ImageUpload
               label="About Section Image"
-              value={content.imageUrl || ''}
-              onChange={(url) => updateContent('imageUrl', url)}
+              value={content.imageUrl || ""}
+              onChange={(url) => updateContent("imageUrl", url)}
             />
           </>
         );
 
-      case 'services':
+      case "services":
         return (
           <>
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={content.title || ''}
-                onChange={(e) => updateContent('title', e.target.value)}
+                value={content.title || ""}
+                onChange={(e) => updateContent("title", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -185,7 +206,7 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
                 value={JSON.stringify(content.services || [], null, 2)}
                 onChange={(e) => {
                   try {
-                    updateContent('services', JSON.parse(e.target.value));
+                    updateContent("services", JSON.parse(e.target.value));
                   } catch {
                     // Invalid JSON, ignore
                   }
@@ -197,15 +218,15 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
           </>
         );
 
-      case 'testimonials':
+      case "testimonials":
         return (
           <>
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={content.title || ''}
-                onChange={(e) => updateContent('title', e.target.value)}
+                value={content.title || ""}
+                onChange={(e) => updateContent("title", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -217,38 +238,40 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
                 step="0.1"
                 min="0"
                 max="5"
-                value={content.overallRating || ''}
-                onChange={(e) => updateContent('overallRating', parseFloat(e.target.value))}
+                value={content.overallRating || ""}
+                onChange={(e) =>
+                  updateContent("overallRating", parseFloat(e.target.value))
+                }
                 className="mt-1"
               />
             </div>
           </>
         );
 
-      case 'gallery':
+      case "gallery":
         return (
           <>
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={content.title || ''}
-                onChange={(e) => updateContent('title', e.target.value)}
+                value={content.title || ""}
+                onChange={(e) => updateContent("title", e.target.value)}
                 className="mt-1"
               />
             </div>
           </>
         );
 
-      case 'text':
+      case "text":
         return (
           <>
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={content.title || ''}
-                onChange={(e) => updateContent('title', e.target.value)}
+                value={content.title || ""}
+                onChange={(e) => updateContent("title", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -257,37 +280,37 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
               <Textarea
                 id="text"
                 rows={5}
-                value={content.text || ''}
-                onChange={(e) => updateContent('text', e.target.value)}
+                value={content.text || ""}
+                onChange={(e) => updateContent("text", e.target.value)}
                 className="mt-1"
               />
             </div>
           </>
         );
 
-      case 'image':
+      case "image":
         return (
           <>
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={content.title || ''}
-                onChange={(e) => updateContent('title', e.target.value)}
+                value={content.title || ""}
+                onChange={(e) => updateContent("title", e.target.value)}
                 className="mt-1"
               />
             </div>
             <ImageUpload
               label="Section Image"
-              value={content.imageUrl || ''}
-              onChange={(url) => updateContent('imageUrl', url)}
+              value={content.imageUrl || ""}
+              onChange={(url) => updateContent("imageUrl", url)}
             />
             <div>
               <Label htmlFor="alt">Alt Text</Label>
               <Input
                 id="alt"
-                value={content.alt || ''}
-                onChange={(e) => updateContent('alt', e.target.value)}
+                value={content.alt || ""}
+                onChange={(e) => updateContent("alt", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -300,8 +323,8 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              value={content.title || ''}
-              onChange={(e) => updateContent('title', e.target.value)}
+              value={content.title || ""}
+              onChange={(e) => updateContent("title", e.target.value)}
               className="mt-1"
             />
           </div>
@@ -319,15 +342,19 @@ export function BlockEditor({ block, onSave, onCancel }: BlockEditorProps) {
       </div>
 
       {renderFieldsByType()}
-      
+
       <div className="flex justify-end space-x-3 pt-4 border-t">
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={handleSave} className="bg-primary-600 hover:bg-primary-700">
+        <Button
+          onClick={handleSave}
+          className="bg-primary-600 hover:bg-primary-700"
+        >
           Save Changes
         </Button>
       </div>
     </div>
   );
 }
+//asdasdasdas
