@@ -27,24 +27,46 @@ export function HeroSection({ content }: HeroSectionProps) {
   };
 
   const data = { ...defaultContent, ...content };
+  
+  const isVideo = (url: string) => {
+    return url?.match(/\.(mp4|webm|ogg|mov|avi|mkv)$/i);
+  };
 
   return (
     <section className="relative min-h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ 
-          backgroundImage: `url(${data.imageUrl})`,
-        }}
-      >
+      {/* Background Media with Overlay */}
+      {data.imageUrl && isVideo(data.imageUrl) ? (
+        <>
+          <video 
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          >
+            <source src={data.imageUrl} type="video/mp4" />
+          </video>
+          <div 
+            className="absolute inset-0 bg-black z-10"
+            style={{ opacity: parseInt(data.overlayOpacity) / 100 }}
+          ></div>
+        </>
+      ) : (
         <div 
-          className="absolute inset-0 bg-black"
-          style={{ opacity: parseInt(data.overlayOpacity) / 100 }}
-        ></div>
-      </div>
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: `url(${data.imageUrl})`,
+          }}
+        >
+          <div 
+            className="absolute inset-0 bg-black"
+            style={{ opacity: parseInt(data.overlayOpacity) / 100 }}
+          ></div>
+        </div>
+      )}
       
       {/* Content */}
-      <div className={`relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-${data.textAlignment} text-white`}>
+      <div className={`relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-${data.textAlignment} text-white`}>
         <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-8">
           {data.title}
         </h1>
