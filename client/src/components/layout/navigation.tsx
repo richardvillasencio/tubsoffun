@@ -172,14 +172,7 @@ export function Navigation() {
           <div className="flex items-center justify-between h-20">
             {/* Logo Section - Left side with emblem and main logo */}
             <div className="flex items-center space-x-4 flex-shrink-0">
-              {/* SDYOSR Emblem */}
-              <div className="flex-shrink-0">
-                <img 
-                  src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
-                  alt="SDYOSR Emblem" 
-                  className="h-16 w-16 object-contain" 
-                />
-              </div>
+              
               
               {/* Main Tubs of Fun Logo */}
               <div className="flex-shrink-0">
