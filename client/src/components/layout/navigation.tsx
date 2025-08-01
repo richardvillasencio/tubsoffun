@@ -127,145 +127,165 @@ export function Navigation() {
     <header className="sticky top-0 z-50">
       {/* Top Bar - Customizable Section */}
       {headerConfig?.topBarEnabled !== false && (
-        <div className="text-white border-b border-white/20" style={getTopBarStyles()}>
+        <div className="text-white" style={getTopBarStyles()}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-12 text-sm">
-              {/* Contact Info */}
-              <div className="flex items-center space-x-4">
-                <span className="flex items-center">
+            <div className="flex items-center justify-between h-12 text-sm">
+              {/* Left side - Phone and Address stacked */}
+              <div className="flex flex-col justify-center h-12">
+                <div className="flex items-center">
                   <Phone className="h-3 w-3 mr-1" />
                   {headerConfig?.topBarPhone || "(701) 234-0705"}
-                </span>
-                <span className="hidden sm:block">
+                </div>
+                <div className="text-xs mt-0.5">
                   📍{" "}
                   {headerConfig?.topBarAddress ||
                     "601 Main Ave W, West Fargo, ND 58078"}
-                </span>
+                </div>
               </div>
 
-              {/* Top Right Menu */}
-              <div className="flex items-center space-x-4 text-sm">
-                {headerConfig?.topBarLinks &&
-                Array.isArray(headerConfig.topBarLinks) ? (
-                  (
-                    headerConfig.topBarLinks as Array<{
-                      name: string;
-                      href: string;
-                      hasDropdown?: boolean;
-                    }>
-                  ).map((link, index: number) => (
-                    <div key={index} className="flex items-center space-x-4">
+              {/* Center - White divider line */}
+              <div className="hidden sm:block w-px h-8 bg-white/60"></div>
+
+              {/* Right side - Menu Links */}
+              <div className="flex items-center space-x-4">
+                {/* Top Menu Links */}
+                <div className="hidden md:flex items-center space-x-4">
+                  {headerConfig?.topBarLinks &&
+                  Array.isArray(headerConfig.topBarLinks) ? (
+                    (
+                      headerConfig.topBarLinks as Array<{
+                        name: string;
+                        href: string;
+                        hasDropdown?: boolean;
+                      }>
+                    ).map((link, index: number) => (
+                      <div key={index} className="flex items-center space-x-4">
+                        <Link
+                          href={link.href || "#"}
+                          className="hover:opacity-80 flex items-center"
+                        >
+                          {link.name}
+                          {link.hasDropdown && (
+                            <svg
+                              className="ml-1 h-3 w-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 9l-7 7-7-7"
+                              />
+                            </svg>
+                          )}
+                        </Link>
+                        {index <
+                          (headerConfig.topBarLinks as Array<any>).length - 1 && (
+                          <span className="opacity-60">|</span>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <>
                       <Link
-                        href={link.href || "#"}
+                        href="/contact"
                         className="hover:opacity-80 flex items-center"
                       >
-                        {link.name}
-                        {link.hasDropdown && (
-                          <svg
-                            className="ml-1 h-3 w-3"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        )}
+                        Contact Us
+                        <svg
+                          className="ml-1 h-3 w-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
                       </Link>
-                      {index <
-                        (headerConfig.topBarLinks as Array<any>).length - 1 && (
-                        <span className="opacity-60">|</span>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <>
-                    <Link
-                      href="/contact"
-                      className="hover:opacity-80 flex items-center"
-                    >
-                      Contact Us
-                      <svg
-                        className="ml-1 h-3 w-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                      <span className="opacity-60">|</span>
+                      <Link
+                        href="/about"
+                        className="hover:opacity-80 flex items-center"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </Link>
-                    <span className="opacity-60">|</span>
-                    <Link
-                      href="/about"
-                      className="hover:opacity-80 flex items-center"
-                    >
-                      Our Company
-                      <svg
-                        className="ml-1 h-3 w-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </Link>
-                    <span className="opacity-60">|</span>
-                    <Link href="/" className="hover:opacity-80">
-                      Home
-                    </Link>
-                  </>
-                )}
-                {/* Tubby Mascot in top bar */}
-                <img 
-                  src={headerConfig?.mascotUrl || "/uploads/file-1754062130457-246269446.webp"} 
-                  alt="Tubby Mascot" 
-                  className="h-8 w-8 object-contain" 
-                />
+                        Our Company
+                        <svg
+                          className="ml-1 h-3 w-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </Link>
+                      <span className="opacity-60">|</span>
+                      <Link href="/" className="hover:opacity-80">
+                        Home
+                      </Link>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Navigation - Customizable Section */}
-      <div className="text-white shadow-lg" style={getMainNavStyles()}>
+      {/* Main Navigation - Customizable Section with Logo and Mascot */}
+      <div className="relative" style={getMainNavStyles()}>
+        {/* Logo and Emblem - positioned absolutely to span both header sections on LEFT */}
+        <div className="absolute left-8 top-0 transform -translate-y-6 z-10 hidden lg:flex items-center space-x-2">
+          {/* SDYOSR Emblem */}
+          <img 
+            src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
+            alt="SDYOSR Emblem" 
+            className="h-20 w-20 object-contain" 
+          />
+          
+          {/* Main Tubs of Fun Logo */}
+          <Link href="/">
+            <img src={logoUrl} alt={logoAlt} className="h-20 w-auto" />
+          </Link>
+        </div>
+
+        {/* Large Tubby Mascot - positioned absolutely to span both header sections on RIGHT */}
+        <div className="absolute right-8 top-0 transform -translate-y-6 z-10 hidden lg:block">
+          <img
+            src={
+              headerConfig?.mascotUrl ||
+              "/uploads/file-1754062130457-246269446.webp"
+            }
+            alt="Tubby Mascot"
+            className="h-24 w-24 object-contain"
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo Section - Left side with emblem and main logo */}
-            <div className="flex items-center space-x-4 flex-shrink-0">
-              {/* SDYOSR Emblem */}
-              <div className="flex-shrink-0">
-                <img 
-                  src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
-                  alt="SDYOSR Emblem" 
-                  className="h-16 w-16 object-contain" 
-                />
-              </div>
-              
-              {/* Main Tubs of Fun Logo */}
-              <div className="flex-shrink-0">
-                <Link href="/">
-                  <img src={logoUrl} alt={logoAlt} className="h-16 w-auto" />
-                </Link>
-              </div>
+            {/* Mobile logo for small screens */}
+            <div className="lg:hidden flex items-center space-x-2">
+              <img 
+                src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
+                alt="SDYOSR Emblem" 
+                className="h-12 w-12 object-contain" 
+              />
+              <Link href="/">
+                <img src={logoUrl} alt={logoAlt} className="h-12 w-auto" />
+              </Link>
             </div>
 
             {/* Main Navigation - Center */}
-            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center">
+            <div className="hidden lg:flex items-center space-x-0 absolute inset-x-0 justify-center">
               {/* HOT TUBS */}
               <div className="relative group">
                 <Link
@@ -402,20 +422,6 @@ export function Navigation() {
                     />
                   </svg>
                 </Link>
-              </div>
-            </div>
-
-            {/* Right side - Tubby Mascot */}
-            <div className="hidden lg:flex items-center flex-shrink-0">
-              <div className="flex-shrink-0">
-                <img
-                  src={
-                    headerConfig?.mascotUrl ||
-                    "/uploads/file-1754062130457-246269446.webp"
-                  }
-                  alt="Tubby Mascot"
-                  className="h-16 w-16 object-contain"
-                />
               </div>
             </div>
 
