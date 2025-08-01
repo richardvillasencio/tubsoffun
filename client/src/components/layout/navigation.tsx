@@ -169,15 +169,15 @@ export function Navigation() {
         style={getMainNavStyles()}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
+          <div className="flex items-center justify-between h-20">
             {/* Logo Section - Left side with emblem and main logo */}
-            <div className="flex items-center space-x-3 flex-shrink-0">
+            <div className="flex items-center space-x-4 flex-shrink-0">
               {/* SDYOSR Emblem */}
               <div className="flex-shrink-0">
                 <img 
                   src={headerConfig?.emblemUrl || "/uploads/file-1754062120788-763550614.webp"} 
                   alt="SDYOSR Emblem" 
-                  className="h-12 w-12 object-contain" 
+                  className="h-16 w-16 object-contain" 
                 />
               </div>
               
@@ -187,14 +187,14 @@ export function Navigation() {
                   <img 
                     src={logoUrl} 
                     alt={logoAlt} 
-                    className="h-12 w-auto" 
+                    className="h-16 w-auto" 
                   />
                 </Link>
               </div>
             </div>
 
             {/* Main Navigation - Center */}
-            <div className="hidden lg:flex items-center ml-[242px] mr-[242px] pl-[-7px] pr-[-7px]">
+            <div className="hidden lg:flex items-center space-x-0 flex-1 justify-center">
               {/* HOT TUBS */}
               <div className="relative group">
                 <Link href="/hot-tubs" className="px-4 py-4 text-white hover:bg-orange-600 transition-colors font-medium flex items-center border-r border-orange-300">
@@ -262,7 +262,7 @@ export function Navigation() {
                 <img 
                   src={headerConfig?.mascotUrl || "/uploads/file-1754062130457-246269446.webp"} 
                   alt="Tubby Mascot" 
-                  className="h-12 w-12 object-contain" 
+                  className="h-16 w-16 object-contain" 
                 />
               </div>
             </div>
